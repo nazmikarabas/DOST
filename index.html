@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#071426" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="DOST" />
+  <title>DOST</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="splash" class="splash">
+    <div class="logo-mark">
+      <span class="traveler"></span>
+      <span class="dot d1"></span>
+      <span class="dot d2"></span>
+      <span class="dot d3"></span>
+      <span class="dot d4"></span>
+      <span class="dot d5"></span>
+    </div>
+    <h1>DOST</h1>
+    <p>Hayatının dönüm noktalarını unutma.</p>
+  </div>
+
+  <main class="app">
+    <section id="onboarding" class="screen onboarding">
+      <p class="brand">DOST</p>
+      <h1>Hoş geldin.</h1>
+      <p class="lead">Başlamadan önce hikâyenin ilk taşını koyalım.</p>
+
+      <div class="step active" data-step="1">
+        <label>Hayatında unutmak istemediğin bir anı nedir?</label>
+        <textarea id="firstMemory" placeholder="Aklına gelen ilk anıyı yaz..."></textarea>
+        <p class="hint">Bu cevap DOST yolculuğunun ilk taşı olacak.</p>
+      </div>
+
+      <div class="step" data-step="2">
+        <label>Kim olmak istiyorsun?</label>
+        <div class="chips" id="identityChips">
+          <button type="button">Sağlıklı</button>
+          <button type="button">Sigarasız</button>
+          <button type="button">Güçlü</button>
+          <button type="button">Meraklı</button>
+          <button type="button">Öğrenen</button>
+          <button type="button">İyi bir dost</button>
+        </div>
+        <textarea id="futureSelf" placeholder="Kendi kelimelerinle de yazabilirsin..."></textarea>
+      </div>
+
+      <div class="step" data-step="3">
+        <label>Bir yıl sonraki kendine ne söylemek istersin?</label>
+        <textarea id="firstLetter" placeholder="Gelecekteki kendine mektubun..."></textarea>
+      </div>
+
+      <div class="step" data-step="4">
+        <label>İlk bölümünün adı ne olsun?</label>
+        <input id="firstChapter" placeholder="Yeniden Başlangıç" />
+        <p class="hint">Her hikâyenin bir başlangıcı vardır.</p>
+      </div>
+
+      <div class="row">
+        <button id="backBtn" class="secondary" type="button" onclick="prevStep()">Geri</button>
+        <button id="nextBtn" type="button" onclick="nextStep()">Devam Et</button>
+      </div>
+    </section>
+
+    <section id="home" class="screen">
+      <header class="hero">
+        <p>Günaydın Nazmi</p>
+        <h1>Her yeni gün yeni bir başlangıç doğurur.</h1>
+        <small id="todayText"></small>
+      </header>
+
+      <article class="card chapter" onclick="openTab('chapters')">
+        <span>Mevcut Bölüm</span>
+        <h2 id="currentChapterName">Yeniden Başlangıç</h2>
+        <p id="currentChapterDesc">İlk sayfaların yazıldığı dönem.</p>
+      </article>
+
+      <article class="quote">
+        <span>Günün Cümlesi</span>
+        <p>Bugün de hikâyene yeni bir satır ekleme fırsatın var.</p>
+      </article>
+
+      <article class="card">
+        <span>Bugünün Şarkısı</span>
+        <h3>Henüz seçilmedi</h3>
+        <p class="muted">Bir gün bu sayfanın da bir şarkısı olacak.</p>
+      </article>
+
+      <article class="writebox">
+        <p>Bugün hikâyene ne eklemek istersin?</p>
+        <div class="row wrap">
+          <button type="button" onclick="openComposer('story')">Hikâye Yaz</button>
+          <button type="button" onclick="openComposer('note')">Kendime Not</button>
+          <button type="button" onclick="openComposer('milestone')">Dönüm Noktası</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="head">
+          <h2>Bugün</h2>
+          <button class="textbtn" type="button" onclick="openTab('tasks')">Tümü</button>
+        </div>
+        <div id="homeTasks"></div>
+      </article>
+
+      <article class="card">
+        <span>Son Hikâye</span>
+        <div id="lastStory" class="empty">Henüz hikâye yok. İlk satırı bekliyoruz.</div>
+      </article>
+    </section>
+
+    <section id="stories" class="screen">
+      <div class="pagehead">
+        <h1>Hikâye</h1>
+        <button type="button" onclick="openComposer('story')">+ Yeni</button>
+      </div>
+      <input class="search" id="searchInput" oninput="renderStories()" placeholder="Hikâyelerde ara..." />
+      <div class="filters">
+        <button class="active" type="button" data-filter="all" onclick="setFilter('all')">Tümü</button>
+        <button type="button" data-filter="story" onclick="setFilter('story')">Hikâye</button>
+        <button type="button" data-filter="milestone" onclick="setFilter('milestone')">Dönüm</button>
+        <button type="button" data-filter="letter" onclick="setFilter('letter')">Mektup</button>
+      </div>
+      <div id="storyList" class="timeline"></div>
+    </section>
+
+    <section id="longing" class="screen">
+      <div class="pagehead"><h1>Özlem</h1></div>
+      <article class="longingHero">
+        <h2>Bazı günler geçer.</h2>
+        <p>Bazıları ise bizimle kalır.</p>
+      </article>
+      <article class="card">
+        <span>Bugün Geçmişte</span>
+        <div id="memoryToday"></div>
+      </article>
+      <article class="card">
+        <span>Bugünkü Seni Yaratan Anlar</span>
+        <div id="museumPreview"></div>
+      </article>
+      <article class="card">
+        <span>Hatır</span>
+        <p class="muted">İz bırakan insanlar, günler ve anılar burada büyüyecek.</p>
+      </article>
+    </section>
+
+    <section id="tasks" class="screen">
+      <div class="pagehead">
+        <h1>Görevler</h1>
+        <button type="button" onclick="addCustomTask()">+ Ekle</button>
+      </div>
+      <div id="taskGroups"></div>
+    </section>
+
+    <section id="me" class="screen">
+      <div class="profile">
+        <div class="avatar">N</div>
+        <h1>Nazmi Karabaş</h1>
+        <p>Makina Mühendisi</p>
+      </div>
+
+      <article class="card">
+        <span>Kim Olmak İstiyorum?</span>
+        <p id="futureSelfText">Sağlıklı, sigarasız, güçlü, meraklı, öğrenen, iyi bir dost.</p>
+      </article>
+
+      <article class="card">
+        <span>Değişim</span>
+        <p>Büyük dönüşümler, küçük kararların birikimidir.</p>
+        <button type="button" onclick="openChangeLog()">Değişim Kaydı</button>
+      </article>
+
+      <article class="card">
+        <span>Zaman Kapsülü</span>
+        <p>Bazı sözler hemen okunmak için yazılmaz.</p>
+        <button type="button" onclick="openCapsule()">Kapsülleri Aç</button>
+      </article>
+
+      <article class="card">
+        <span>DOST İlkesi</span>
+        <p>Bu uygulama seni yargılamaz. Sadece hikâyene tanıklık eder.</p>
+      </article>
+    </section>
+
+    <section id="chapters" class="screen">
+      <div class="pagehead">
+        <h1>Bölümler</h1>
+        <button type="button" onclick="newChapter()">+ Bölüm</button>
+      </div>
+      <div id="chapterList"></div>
+    </section>
+
+    <section id="capsule" class="screen">
+      <div class="pagehead">
+        <h1>Zaman Kapsülü</h1>
+        <button type="button" onclick="openTab('me')">Kapat</button>
+      </div>
+      <article class="longingHero">
+        <h2>Bazı sözler hemen okunmak için yazılmaz.</h2>
+      </article>
+      <div id="capsuleList"></div>
+      <button class="wide" type="button" onclick="openComposer('letter')">Yeni Mektup Yaz</button>
+    </section>
+
+    <section id="change" class="screen">
+      <div class="pagehead">
+        <h1>Değişim</h1>
+        <button type="button" onclick="openTab('me')">Kapat</button>
+      </div>
+      <article class="card">
+        <span>Sigara Günlüğü</span>
+        <button type="button" onclick="openSmokeForm()">Sigara Kaydı Ekle</button>
+        <div id="smokeList"></div>
+      </article>
+      <article class="card">
+        <span>Not</span>
+        <p>Burada zamanla sigara tetikleyicileri, kilo, alışkanlıklar ve dönüşüm fotoğrafları yer alacak.</p>
+      </article>
+    </section>
+
+    <nav class="tabbar">
+      <button class="active" type="button" onclick="openTab('home')">Ana</button>
+      <button type="button" onclick="openTab('stories')">Hikâye</button>
+      <button type="button" onclick="openTab('longing')">Özlem</button>
+      <button type="button" onclick="openTab('tasks')">Görevler</button>
+      <button type="button" onclick="openTab('me')">Ben</button>
+    </nav>
+  </main>
+
+  <div id="composer" class="sheet">
+    <div class="sheetcard">
+      <div class="head">
+        <h2 id="composerTitle">Hikâye Yaz</h2>
+        <button class="secondary" type="button" onclick="closeComposer()">Kapat</button>
+      </div>
+      <input id="entryTitle" placeholder="Başlık" />
+      <textarea id="entryBody" placeholder="Bugün ne oldu?"></textarea>
+      <div class="row">
+        <select id="entryMood">
+          <option>😊 Sakin</option><option>😌 Huzurlu</option><option>🔥 Heyecanlı</option>
+          <option>😐 Normal</option><option>😓 Zorlandım</option><option>💙 Duygusal</option>
+        </select>
+        <input id="entrySong" placeholder="Şarkı" />
+      </div>
+      <input id="entryTags" placeholder="Etiketler: tenis, sigara, dost..." />
+      <button class="wide" type="button" onclick="saveEntry()">Kaydet</button>
+    </div>
+  </div>
+
+  <div id="smokeSheet" class="sheet">
+    <div class="sheetcard">
+      <div class="head">
+        <h2>Sigara Kaydı</h2>
+        <button class="secondary" type="button" onclick="closeSmokeForm()">Kapat</button>
+      </div>
+      <input id="smokeTime" type="time" />
+      <select id="smokeReason">
+        <option>🍽️ Yemek sonrası</option><option>☕ Kahve</option><option>😰 Stres</option>
+        <option>🎉 Sosyal ortam</option><option>😴 Can sıkıntısı</option><option>🔁 Alışkanlık</option>
+      </select>
+      <textarea id="smokeNote" placeholder="Neden içtin? Ne hissettin?"></textarea>
+      <button class="wide" type="button" onclick="saveSmoke()">Kaydet</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
